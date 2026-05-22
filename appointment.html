@@ -1053,7 +1053,14 @@
           </div>
 
           <!-- STEP 3: DETAILS -->
-          <div id="step3" style="display: none">
+          <form
+            id="step3"
+            name="appointment"
+            method="POST"
+            data-netlify="true"
+            style="display: none"
+          >
+            <input type="hidden" name="form-name" value="appointment" />
             <h3 style="margin-bottom: 1.5rem; font-size: 1.1rem">
               Your Details
             </h3>
@@ -1113,7 +1120,7 @@
               Review Appointment &#8594;
             </button>
             <button class="btn-back" onclick="goStep(2)">&#8592; Back</button>
-          </div>
+          </form>
 
           <!-- STEP 4: REVIEW -->
           <div id="step4" style="display: none">
