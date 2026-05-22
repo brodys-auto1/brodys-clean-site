@@ -54,8 +54,11 @@
         font-size: 2rem;
       }
       .nav-links {
-        display: flex;
-        gap: 2rem;
+        .nav-links {
+          display: flex;
+          align-items: center;
+          gap: 2rem;
+        }
       }
       .nav-links a {
         color: #ccc;
@@ -184,13 +187,15 @@
         color: #666;
       }
       .range-row input {
-        flex: 1;
-        padding: 0.45rem 0.6rem;
-        border: 1.5px solid var(--border);
-        border-radius: 5px;
-        font-size: 0.82rem;
-        font-family: inherit;
-        outline: none;
+        .range-row input {
+          width: 100%;
+          min-width: 0;
+          padding: 0.45rem 0.5rem;
+          border: 1px solid var(--border);
+          border-radius: 5px;
+          font-size: 0.82rem;
+          box-sizing: border-box;
+        }
       }
       .range-row input:focus {
         border-color: var(--blue);
@@ -223,8 +228,6 @@
       }
 
       /* MAIN GRID */
-      .inv-main {
-      }
       .inv-toolbar {
         display: flex;
         align-items: center;
@@ -237,7 +240,7 @@
         font-size: 0.9rem;
         color: #666;
       }
-      <br > .inv-count strong {
+      .inv-count strong {
         color: var(--dark);
       }
       .sort-select {
