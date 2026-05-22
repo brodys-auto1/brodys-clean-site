@@ -1,0 +1,1277 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Inventory — Brody's Auto</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        color: #0a0a0a;
+        background: #fff;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      img {
+        display: block;
+        width: 100%;
+        object-fit: cover;
+      }
+      :root {
+        --blue: #5bb8f5;
+        --dark: #0a0a1a;
+        --light: #f0f7ff;
+        --border: #cde4f7;
+      }
+
+      /* NAV */
+      nav {
+        background: var(--dark);
+        padding: 0 2.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 68px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+      }
+      .logo {
+        font-family: "Dancing Script", cursive;
+        color: var(--blue);
+        font-size: 2rem;
+      }
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+      }
+      .nav-links a {
+        color: #ccc;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+      .nav-links a:hover,
+      .nav-links a.active {
+        color: var(--blue);
+      }
+      .nav-cta {
+        background: var(--blue);
+        color: var(--dark);
+        padding: 0.5rem 1.3rem;
+        border-radius: 4px;
+        font-weight: 700;
+        font-size: 0.9rem;
+      }
+      .nav-cta:hover {
+        background: #3aa0e0;
+      }
+      .nav-toggle {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        background: none;
+        border: none;
+        padding: 0.25rem;
+      }
+      .nav-toggle span {
+        display: block;
+        width: 24px;
+        height: 2px;
+        background: #fff;
+        border-radius: 2px;
+      }
+      .mobile-menu {
+        display: none;
+        flex-direction: column;
+        background: var(--dark);
+        padding: 1rem 2rem 1.5rem;
+        gap: 1rem;
+        border-top: 1px solid #1a2a3a;
+      }
+      .mobile-menu a {
+        color: #ccc;
+        font-size: 0.95rem;
+        font-weight: 500;
+      }
+      .mobile-menu a:hover {
+        color: var(--blue);
+      }
+
+      /* PAGE HEADER */
+      .page-header {
+        background: linear-gradient(135deg, var(--dark) 55%, #0d1f3a 100%);
+        padding: 3.5rem 2.5rem;
+        color: #fff;
+      }
+      .page-header h1 {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 0.4rem;
+      }
+      .page-header p {
+        color: #b0c4d8;
+        font-size: 0.95rem;
+      }
+
+      /* LAYOUT */
+      .inv-layout {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2.5rem;
+      }
+
+      /* SIDEBAR FILTERS */
+      .sidebar {
+        position: sticky;
+        top: 88px;
+        align-self: start;
+      }
+      .filter-box {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.25rem;
+      }
+      .filter-box h3 {
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: #888;
+        margin-bottom: 1rem;
+      }
+      .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .filter-check {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 0.9rem;
+        cursor: pointer;
+      }
+      .filter-check input {
+        accent-color: var(--blue);
+        width: 15px;
+        height: 15px;
+        cursor: pointer;
+      }
+      .range-row {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+        font-size: 0.82rem;
+        color: #666;
+      }
+      .range-row input {
+        flex: 1;
+        padding: 0.45rem 0.6rem;
+        border: 1.5px solid var(--border);
+        border-radius: 5px;
+        font-size: 0.82rem;
+        font-family: inherit;
+        outline: none;
+      }
+      .range-row input:focus {
+        border-color: var(--blue);
+      }
+      .apply-btn {
+        width: 100%;
+        padding: 0.65rem;
+        background: var(--dark);
+        color: var(--blue);
+        border: none;
+        border-radius: 6px;
+        font-weight: 700;
+        font-size: 0.88rem;
+        cursor: pointer;
+        margin-top: 0.75rem;
+      }
+      .apply-btn:hover {
+        background: #1a2a4a;
+      }
+      .reset-link {
+        display: block;
+        text-align: center;
+        font-size: 0.82rem;
+        color: #888;
+        cursor: pointer;
+        margin-top: 0.5rem;
+      }
+      .reset-link:hover {
+        color: var(--blue);
+      }
+
+      /* MAIN GRID */
+      .inv-main {
+      }
+      .inv-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+      .inv-count {
+        font-size: 0.9rem;
+        color: #666;
+      }
+      <br > .inv-count strong {
+        color: var(--dark);
+      }
+      .sort-select {
+        padding: 0.45rem 0.75rem;
+        border: 1.5px solid var(--border);
+        border-radius: 5px;
+        font-size: 0.88rem;
+        font-family: inherit;
+        outline: none;
+        color: var(--dark);
+      }
+      .sort-select:focus {
+        border-color: var(--blue);
+      }
+      .type-tabs {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.5rem;
+      }
+      .type-tab {
+        padding: 0.4rem 1.1rem;
+        border: 1.5px solid #d0d0d8;
+        border-radius: 20px;
+        background: #fff;
+        color: #555;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .type-tab.active,
+      .type-tab:hover {
+        background: var(--dark);
+        color: var(--blue);
+        border-color: var(--dark);
+      }
+
+      /* VEHICLE CARDS */
+      .vehicle-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.4rem;
+      }
+      .vcard {
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .vcard:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(91, 184, 245, 0.13);
+      }
+      .vcard-img {
+        height: 190px;
+        overflow: hidden;
+        background: #deeefa;
+        position: relative;
+      }
+      .vcard-img img {
+        height: 190px;
+        transition: transform 0.3s;
+      }
+      .vcard:hover .vcard-img img {
+        transform: scale(1.04);
+      }
+      .sold-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(10, 10, 26, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .sold-overlay span {
+        background: #ff4444;
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.9rem;
+        padding: 0.4rem 1.2rem;
+        border-radius: 4px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+      .vcard-body {
+        padding: 1.1rem;
+      }
+      .vcard-badge {
+        display: inline-block;
+        background: var(--dark);
+        color: var(--blue);
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 10px;
+        margin-bottom: 0.6rem;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .vcard-title {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+      }
+      .vcard-meta {
+        font-size: 0.82rem;
+        color: #888;
+        margin-bottom: 0.85rem;
+      }
+      .vcard-price {
+        font-size: 1.25rem;
+        font-weight: 700;
+      }
+      .vcard-btn {
+        display: block;
+        text-align: center;
+        margin-top: 0.85rem;
+        padding: 0.55rem;
+        border: 1.5px solid var(--dark);
+        border-radius: 4px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+      .vcard-btn:hover {
+        background: var(--dark);
+        color: var(--blue);
+      }
+      .vcard-btn.disabled {
+        border-color: #ccc;
+        color: #aaa;
+        pointer-events: none;
+      }
+      .no-results {
+        grid-column: 1/-1;
+        text-align: center;
+        padding: 3rem;
+        color: #888;
+        font-size: 0.95rem;
+      }
+
+      /* ADMIN */
+      #admin-btn {
+        position: fixed;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        background: var(--dark);
+        color: var(--blue);
+        border: 2px solid var(--blue);
+        padding: 0.6rem 1.1rem;
+        border-radius: 30px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        cursor: pointer;
+        z-index: 999;
+      }
+      #admin-btn:hover {
+        background: var(--blue);
+        color: var(--dark);
+      }
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.75);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+      .modal-overlay.open {
+        display: flex;
+      }
+      .modal {
+        background: #fff;
+        border-radius: 12px;
+        width: 92%;
+        max-width: 860px;
+        max-height: 92vh;
+        overflow-y: auto;
+        padding: 2rem;
+        position: relative;
+      }
+      .modal h2 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+      }
+      .modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: none;
+        font-size: 1.4rem;
+        cursor: pointer;
+        color: #888;
+      }
+      #login-panel {
+        text-align: center;
+      }
+      #login-panel p {
+        color: #888;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+      }
+      #login-panel input {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto 0.75rem;
+        display: block;
+        padding: 0.6rem 0.85rem;
+        border: 1.5px solid var(--border);
+        border-radius: 6px;
+        font-size: 0.92rem;
+        font-family: inherit;
+        outline: none;
+      }
+      #login-panel input:focus {
+        border-color: var(--blue);
+      }
+      #login-panel button {
+        background: var(--dark);
+        color: var(--blue);
+        border: none;
+        padding: 0.7rem 2rem;
+        border-radius: 6px;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 0.95rem;
+      }
+      #login-error {
+        color: red;
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+        display: none;
+      }
+      #admin-panel {
+        display: none;
+      }
+      .admin-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 0.5rem;
+      }
+      .admin-tab {
+        padding: 0.4rem 1rem;
+        border: none;
+        background: none;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.88rem;
+        color: #888;
+        border-radius: 4px 4px 0 0;
+      }
+      .admin-tab.active {
+        color: var(--dark);
+        background: var(--light);
+      }
+      .tab-content {
+        display: none;
+      }
+      .tab-content.active {
+        display: block;
+      }
+      .inv-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+        margin-bottom: 1.5rem;
+      }
+      .inv-table th {
+        background: var(--dark);
+        color: var(--blue);
+        padding: 0.6rem 0.75rem;
+        text-align: left;
+      }
+      .inv-table td {
+        padding: 0.55rem 0.75rem;
+        border-bottom: 1px solid #eee;
+        vertical-align: middle;
+      }
+      .inv-table tr:hover td {
+        background: var(--light);
+      }
+      .del-btn {
+        background: #ff4444;
+        color: #fff;
+        border: none;
+        padding: 0.3rem 0.65rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.8rem;
+      }
+      .toggle-btn {
+        background: var(--blue);
+        color: var(--dark);
+        border: none;
+        padding: 0.3rem 0.65rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+      .add-form {
+        background: var(--light);
+        border-radius: 8px;
+        padding: 1.5rem;
+        border: 1px solid var(--border);
+      }
+      .add-form h3 {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+      }
+      .arow {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+      }
+      .arow label {
+        font-size: 0.82rem;
+        font-weight: 600;
+        display: block;
+        margin-bottom: 0.3rem;
+      }
+      .arow input,
+      .arow select,
+      .arow-full input {
+        padding: 0.55rem 0.75rem;
+        border: 1.5px solid var(--border);
+        border-radius: 6px;
+        font-size: 0.88rem;
+        font-family: inherit;
+        width: 100%;
+        outline: none;
+      }
+      .arow input:focus,
+      .arow select:focus,
+      .arow-full input:focus {
+        border-color: var(--blue);
+      }
+      .arow-full {
+        margin-bottom: 0.75rem;
+      }
+      .arow-full label {
+        font-size: 0.82rem;
+        font-weight: 600;
+        display: block;
+        margin-bottom: 0.3rem;
+      }
+      .save-btn {
+        background: var(--dark);
+        color: var(--blue);
+        border: none;
+        padding: 0.65rem 1.5rem;
+        border-radius: 6px;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 0.88rem;
+      }
+      .sold-badge {
+        background: #ccc;
+        color: #555;
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 10px;
+      }
+
+      /* FOOTER */
+      footer {
+        background: #050510;
+        color: #9bc;
+        padding: 3rem 2.5rem 2rem;
+        margin-top: 2rem;
+      }
+      .footer-inner {
+        max-width: 1120px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1.5fr 1fr 1fr;
+        gap: 3rem;
+        margin-bottom: 2rem;
+      }
+      .footer-brand .logo {
+        font-size: 1.8rem;
+        margin-bottom: 0.75rem;
+      }
+      .footer-brand p {
+        font-size: 0.85rem;
+        color: #7a9ab8;
+        line-height: 1.7;
+      }
+      .footer-col h4 {
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: #fff;
+        margin-bottom: 1rem;
+      }
+      .footer-col a {
+        display: block;
+        font-size: 0.88rem;
+        color: #7a9ab8;
+        margin-bottom: 0.55rem;
+        transition: color 0.2s;
+      }
+      .footer-col a:hover {
+        color: var(--blue);
+      }
+      .footer-bottom {
+        border-top: 1px solid #0d1f3a;
+        padding-top: 1.5rem;
+        text-align: center;
+        font-size: 0.82rem;
+        color: #4a6a88;
+        max-width: 1120px;
+        margin: 0 auto;
+      }
+      .footer-bottom strong {
+        color: var(--blue);
+        font-family: "Dancing Script", cursive;
+        font-size: 1rem;
+      }
+
+      @media (max-width: 900px) {
+        .inv-layout {
+          grid-template-columns: 1fr;
+          padding: 1.5rem;
+        }
+        .sidebar {
+          position: static;
+        }
+        .footer-inner {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      @media (max-width: 640px) {
+        .nav-links,
+        .nav-cta {
+          display: none;
+        }
+        .nav-toggle {
+          display: flex;
+        }
+        .footer-inner {
+          grid-template-columns: 1fr;
+        }
+        .arow {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="index.html" class="logo">Brody's Auto</a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="inventory.html" class="active">Inventory</a>
+        <
+        <a href="appointment.html">Appointments</a>
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <a href="appointment.html" class="nav-cta">Book Appointment</a>
+      <button class="nav-toggle" onclick="toggleMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="index.html">Home</a>
+      <a href="inventory.html">Inventory</a>
+
+      <a href="appointment.html">Appointments</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </div>
+
+    <div class="page-header">
+      <h1>Our Inventory</h1>
+      <p>
+        Browse our full selection of inspected used cars, utility trucks, and
+        Sprinter vans.
+      </p>
+    </div>
+
+    <div class="inv-layout">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="filter-box">
+          <h3>Price Range</h3>
+          <div class="range-row">
+            <input type="number" id="f-min" placeholder="Min $" />
+            <span>—</span>
+            <input type="number" id="f-max" placeholder="Max $" />
+          </div>
+        </div>
+        <div class="filter-box">
+          <h3>Mileage (max)</h3>
+          <div class="filter-group">
+            <label class="filter-check"
+              ><input type="radio" name="miles" value="0" checked /> Any
+              mileage</label
+            >
+            <label class="filter-check"
+              ><input type="radio" name="miles" value="30000" /> Under
+              30,000</label
+            >
+            <label class="filter-check"
+              ><input type="radio" name="miles" value="50000" /> Under
+              50,000</label
+            >
+            <label class="filter-check"
+              ><input type="radio" name="miles" value="75000" /> Under
+              75,000</label
+            >
+          </div>
+        </div>
+        <div class="filter-box">
+          <h3>Status</h3>
+          <div class="filter-group">
+            <label class="filter-check"
+              ><input type="radio" name="status" value="available" checked />
+              Available Only</label
+            >
+            <label class="filter-check"
+              ><input type="radio" name="status" value="all" /> Show All</label
+            >
+          </div>
+        </div>
+        <button class="apply-btn" onclick="applyFilters()">
+          Apply Filters
+        </button>
+        <span class="reset-link" onclick="resetFilters()">Reset Filters</span>
+      </aside>
+
+      <!-- MAIN -->
+      <div class="inv-main">
+        <div class="type-tabs">
+          <button class="type-tab active" onclick="setType('all', this)">
+            All Vehicles
+          </button>
+          <button class="type-tab" onclick="setType('car', this)">
+            Used Cars
+          </button>
+          <button class="type-tab" onclick="setType('truck', this)">
+            Utility Trucks
+          </button>
+          <button class="type-tab" onclick="setType('van', this)">
+            Sprinter Vans
+          </button>
+        </div>
+        <div class="inv-toolbar">
+          <div class="inv-count" id="inv-count"></div>
+          <select class="sort-select" id="sort-sel" onchange="applyFilters()">
+            <option value="default">Sort: Default</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="miles-asc">Mileage: Low to High</option>
+          </select>
+        </div>
+        <div class="vehicle-grid" id="inv-grid"></div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <div class="logo">Brody's Auto</div>
+          <p>
+            Quality used cars, utility trucks, and Sprinter vans. Honest prices,
+            no pressure, every time.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <a href="index.html">Home</a>
+          <a href="inventory.html">Inventory</a>
+
+          <a href="appointment.html">Book Appointment</a>
+          <a href="about.html">About Us</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <a href="#">123 Auto Drive, Your City, OH 44601</a>
+          <a href="tel:3305550199">(330) 555-0199</a>
+          <a href="mailto:info@brodysauto.com">info@brodysauto.com</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        © 2026 <strong>Brody's Auto</strong>. All rights reserved.
+      </div>
+    </footer>
+
+    <!-- ADMIN BUTTON -->
+    <button id="admin-btn" onclick="openAdmin()">Admin</button>
+
+    <!-- ADMIN MODAL -->
+    <div class="modal-overlay" id="modal">
+      <div class="modal">
+        <button class="modal-close" onclick="closeAdmin()">✕</button>
+        <div id="login-panel">
+          <h2>Admin Login</h2>
+          <p>Enter your password to manage inventory</p>
+          <input
+            type="password"
+            id="pw-input"
+            placeholder="Password"
+            onkeydown="if (event.key === 'Enter') doLogin();"
+          />
+          <button onclick="doLogin()">Login</button>
+          <div id="login-error">Incorrect password. Try again.</div>
+        </div>
+        <div id="admin-panel">
+          <h2>Inventory Manager</h2>
+          <div class="admin-tabs">
+            <button
+              class="admin-tab active"
+              onclick="switchTab('vehicles', this)"
+            >
+              All Vehicles
+            </button>
+            <button class="admin-tab" onclick="switchTab('add', this)">
+              Add Vehicle
+            </button>
+          </div>
+          <div class="tab-content active" id="tab-vehicles">
+            <table class="inv-table">
+              <thead>
+                <tr>
+                  <th>Vehicle</th>
+                  <th>Type</th>
+                  <th>Mileage</th>
+                  <th>Price</th>
+                  <th>Image URL</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="inv-tbody"></tbody>
+            </table>
+          </div>
+          <div class="tab-content" id="tab-add">
+            <div class="add-form">
+              <h3>Add New Vehicle</h3>
+              <div class="arow">
+                <div>
+                  <label>Year</label
+                  ><input id="a-year" type="number" placeholder="2021" />
+                </div>
+                <div>
+                  <label>Make</label><input id="a-make" placeholder="Ford" />
+                </div>
+              </div>
+              <div class="arow">
+                <div>
+                  <label>Model</label><input id="a-model" placeholder="F-250" />
+                </div>
+                <div>
+                  <label>Type</label>
+                  <select id="a-type">
+                    <option value="car">Used Car</option>
+                    <option value="truck">Utility Truck</option>
+                    <option value="van">Sprinter Van</option>
+                  </select>
+                </div>
+              </div>
+              <div class="arow">
+                <div>
+                  <label>Mileage (numbers only)</label
+                  ><input id="a-miles" type="number" placeholder="44000" />
+                </div>
+                <div>
+                  <label>Price (numbers only)</label
+                  ><input id="a-price" type="number" placeholder="38500" />
+                </div>
+              </div>
+              <div class="arow-full">
+                <label>Extra Details (drivetrain, trim, etc.)</label
+                ><input id="a-extra" placeholder="4WD · XLT Trim" />
+              </div>
+              <!-- ▼ PASTE IMAGE URL HERE when adding a vehicle -->
+              <div class="arow-full">
+                <label
+                  >Image URL (paste from unsplash.com or your own photo
+                  link)</label
+                ><input
+                  id="a-img"
+                  placeholder="https://images.unsplash.com/photo-..."
+                />
+              </div>
+              <button class="save-btn" onclick="addVehicle()">
+                Add to Inventory
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const PASS = "brodys2026";
+
+      // ── DEFAULT INVENTORY ──
+      // ▼ To pre-load vehicles, edit this array. Each entry: {id, type, title, miles, price, extra, img, sold}
+      // img: paste any image URL, or use '' for a placeholder
+      const DEFAULT_INV = [
+        {
+          id: 1,
+          type: "car",
+          title: "2020 Honda Accord",
+          miles: 42000,
+          price: 19900,
+          extra: "Sedan · FWD",
+          img: "https://images.unsplash.com/photo-1580274455191-1c62238fa333?w=600&q=80",
+          sold: false,
+        },
+        {
+          id: 2,
+          type: "truck",
+          title: "2021 Ford F-250",
+          miles: 44000,
+          price: 38500,
+          extra: "Pickup · 4WD",
+          img: "https://images.unsplash.com/photo-1612825173281-9a193378527e?w=600&q=80",
+          sold: false,
+        },
+        {
+          id: 3,
+          type: "van",
+          title: "2021 Mercedes Sprinter 2500",
+          miles: 38000,
+          price: 42800,
+          extra: "Cargo Van · RWD",
+          img: "https://images.unsplash.com/photo-1559416523-140ddc3d238c?w=600&q=80",
+          sold: false,
+        },
+        {
+          id: 4,
+          type: "car",
+          title: "2018 Toyota Camry",
+          miles: 57000,
+          price: 16400,
+          extra: "Sedan · FWD",
+          img: "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=600&q=80",
+          sold: false,
+        },
+        {
+          id: 5,
+          type: "truck",
+          title: "2021 Chevy Silverado 2500HD",
+          miles: 44000,
+          price: 38700,
+          extra: "Pickup · 4WD",
+          img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80",
+          sold: false,
+        },
+        {
+          id: 6,
+          type: "van",
+          title: "2020 Mercedes Sprinter 3500",
+          miles: 52000,
+          price: 39500,
+          extra: "Cargo Van · RWD",
+          img: "https://images.unsplash.com/photo-1536700503-9cdc7d10f244?w=600&q=80",
+          sold: false,
+        },
+        {
+          id: 7,
+          type: "car",
+          title: "2019 Nissan Altima",
+          miles: 49000,
+          price: 14800,
+          extra: "Sedan · FWD",
+          img: "https://images.unsplash.com/photo-1590362891991-f776e747a588?w=600&q=80",
+          sold: false,
+        },
+        {
+          id: 8,
+          type: "truck",
+          title: "2022 Ram 2500 Tradesman",
+          miles: 29000,
+          price: 41200,
+          extra: "Pickup · 4WD",
+          img: "https://images.unsplash.com/photo-1571819565587-2d3cd68b5a74?w=600&q=80",
+          sold: false,
+        },
+        {
+          id: 9,
+          type: "van",
+          title: "2019 Mercedes Sprinter 1500",
+          miles: 67000,
+          price: 31900,
+          extra: "Passenger Van · RWD",
+          img: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=600&q=80",
+          sold: false,
+        },
+      ];
+
+      let vehicles =
+        JSON.parse(localStorage.getItem("ba_inv") || "null") || DEFAULT_INV;
+      let activeType = "all";
+      let filterMin = 0,
+        filterMax = 999999,
+        filterMiles = 0,
+        filterStatus = "available";
+
+      function saveInv() {
+        localStorage.setItem("ba_inv", JSON.stringify(vehicles));
+      }
+
+      function fmtPrice(n) {
+        return "$" + Number(n).toLocaleString();
+      }
+      function fmtMiles(n) {
+        return Number(n).toLocaleString() + " mi";
+      }
+      function parseMiles(n) {
+        return parseInt(n) || 0;
+      }
+      function parsePrice(n) {
+        return parseInt(n) || 0;
+      }
+
+      function badgeLabel(t) {
+        return t === "car"
+          ? "Used Car"
+          : t === "truck"
+            ? "Utility Truck"
+            : "Sprinter Van";
+      }
+
+      function setType(t, btn) {
+        activeType = t;
+        document
+          .querySelectorAll(".type-tab")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        applyFilters();
+      }
+
+      function applyFilters() {
+        const minVal = document.getElementById("f-min").value;
+        const maxVal = document.getElementById("f-max").value;
+        filterMin = minVal ? parseInt(minVal) : 0;
+        filterMax = maxVal ? parseInt(maxVal) : 999999;
+        filterMiles =
+          parseInt(
+            document.querySelector('input[name="miles"]:checked').value,
+          ) || 0;
+        filterStatus = document.querySelector(
+          'input[name="status"]:checked',
+        ).value;
+        const sort = document.getElementById("sort-sel").value;
+        let list = [...vehicles];
+        if (activeType !== "all")
+          list = list.filter((v) => v.type === activeType);
+        if (filterStatus === "available") list = list.filter((v) => !v.sold);
+        list = list.filter(
+          (v) =>
+            parsePrice(v.price) >= filterMin &&
+            parsePrice(v.price) <= filterMax,
+        );
+        if (filterMiles > 0)
+          list = list.filter((v) => parseMiles(v.miles) <= filterMiles);
+        if (sort === "price-asc")
+          list.sort((a, b) => parsePrice(a.price) - parsePrice(b.price));
+        else if (sort === "price-desc")
+          list.sort((a, b) => parsePrice(b.price) - parsePrice(a.price));
+        else if (sort === "miles-asc")
+          list.sort((a, b) => parseMiles(a.miles) - parseMiles(b.miles));
+        renderGrid(list);
+      }
+
+      function resetFilters() {
+        document.getElementById("f-min").value = "";
+        document.getElementById("f-max").value = "";
+        document.querySelector('input[name="miles"][value="0"]').checked = true;
+        document.querySelector(
+          'input[name="status"][value="available"]',
+        ).checked = true;
+        document.getElementById("sort-sel").value = "default";
+        applyFilters();
+      }
+
+      function renderGrid(list) {
+        document.getElementById("inv-count").innerHTML =
+          `<strong>${list.length}</strong> vehicle${list.length !== 1 ? "s" : ""} found`;
+        document.getElementById("inv-grid").innerHTML = list.length
+          ? list
+              .map(
+                (v) => `
+    <div class="vcard">
+      <div class="vcard-img">
+        ${v.img ? `<img src="${v.img}" alt="${v.title}" onerror="this.style.display='none'"/>` : ""}
+        ${v.sold ? `<div class="sold-overlay"><span>Sold</span></div>` : ""}
+      </div>
+      <div class="vcard-body">
+        <span class="vcard-badge">${badgeLabel(v.type)}</span>
+        <div class="vcard-title">${v.title}</div>
+        <div class="vcard-meta">${fmtMiles(v.miles)} &nbsp;·&nbsp; ${v.extra}</div>
+        <div class="vcard-price">${fmtPrice(v.price)}</div>
+        <a href="appointment.html" class="vcard-btn${v.sold ? " disabled" : ""}">${v.sold ? "Sold" : "Schedule Test Drive"}</a>
+      </div>
+    </div>`,
+              )
+              .join("")
+          : `<div class="no-results">No vehicles match your current filters. Try adjusting your search.</div>`;
+      }
+
+      // ── ADMIN ──
+      function renderAdminTable() {
+        document.getElementById("inv-tbody").innerHTML = vehicles
+          .map(
+            (v) => `
+    <tr>
+      <td>${v.title}</td>
+      <td>${badgeLabel(v.type)}</td>
+      <td>${fmtMiles(v.miles)}</td>
+      <td>${fmtPrice(v.price)}</td>
+      <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.75rem;color:#888">${v.img || "—"}</td>
+      <td>${v.sold ? '<span class="sold-badge">Sold</span>' : '<span style="color:green;font-weight:700;font-size:.8rem">Available</span>'}</td>
+      <td style="display:flex;gap:.4rem;">
+        <button class="toggle-btn" onclick="toggleSold(${v.id})">${v.sold ? "Unmark" : "Mark Sold"}</button>
+        <button class="del-btn" onclick="delVeh(${v.id})">Delete</button>
+      </td>
+    </tr>`,
+          )
+          .join("");
+      }
+
+      function toggleSold(id) {
+        const v = vehicles.find((x) => x.id === id);
+        if (v) {
+          v.sold = !v.sold;
+          saveInv();
+          applyFilters();
+          renderAdminTable();
+        }
+      }
+      function delVeh(id) {
+        if (confirm("Delete this vehicle from inventory?")) {
+          vehicles = vehicles.filter((x) => x.id !== id);
+          saveInv();
+          applyFilters();
+          renderAdminTable();
+        }
+      }
+      function addVehicle() {
+        const yr = document.getElementById("a-year").value.trim(),
+          mk = document.getElementById("a-make").value.trim(),
+          mo = document.getElementById("a-model").value.trim(),
+          ty = document.getElementById("a-type").value,
+          mi = document.getElementById("a-miles").value.trim(),
+          pr = document.getElementById("a-price").value.trim(),
+          ex = document.getElementById("a-extra").value.trim(),
+          im = document.getElementById("a-img").value.trim();
+        if (!yr || !mk || !mo || !mi || !pr) {
+          alert("Please fill in Year, Make, Model, Mileage, and Price.");
+          return;
+        }
+        vehicles.unshift({
+          id: Date.now(),
+          type: ty,
+          title: `${yr} ${mk} ${mo}`,
+          miles: parseInt(mi),
+          price: parseInt(pr),
+          extra: ex,
+          img: im,
+          sold: false,
+        });
+        saveInv();
+        applyFilters();
+        renderAdminTable();
+        [
+          "a-year",
+          "a-make",
+          "a-model",
+          "a-miles",
+          "a-price",
+          "a-extra",
+          "a-img",
+        ].forEach((i) => (document.getElementById(i).value = ""));
+        switchTab("vehicles", document.querySelectorAll(".admin-tab")[0]);
+        alert("Vehicle added to inventory!");
+      }
+
+      function openAdmin() {
+        document.getElementById("modal").classList.add("open");
+        document.getElementById("pw-input").value = "";
+        document.getElementById("login-error").style.display = "none";
+        document.getElementById("login-panel").style.display = "block";
+        document.getElementById("admin-panel").style.display = "none";
+      }
+      function closeAdmin() {
+        document.getElementById("modal").classList.remove("open");
+      }
+      function doLogin() {
+        if (document.getElementById("pw-input").value === PASS) {
+          document.getElementById("login-panel").style.display = "none";
+          document.getElementById("admin-panel").style.display = "block";
+          renderAdminTable();
+        } else document.getElementById("login-error").style.display = "block";
+      }
+      function switchTab(n, btn) {
+        document
+          .querySelectorAll(".admin-tab")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((t) => t.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById("tab-" + n).classList.add("active");
+      }
+      document.getElementById("modal").addEventListener("click", function (e) {
+        if (e.target === this) closeAdmin();
+      });
+      function toggleMenu() {
+        const m = document.getElementById("mobile-menu");
+        m.style.display = m.style.display === "flex" ? "none" : "flex";
+      }
+
+      applyFilters();
+    </script>
+  </body>
+</html>
