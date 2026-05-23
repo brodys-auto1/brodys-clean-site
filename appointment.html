@@ -1061,29 +1061,31 @@
             style="display: none"
           >
             <input type="hidden" name="form-name" value="appointment" />
+            <input type="hidden" id="h-date" name="date" />
+            <input type="hidden" id="h-time" name="time" />
             <h3 style="margin-bottom: 1.5rem; font-size: 1.1rem">
               Your Details
             </h3>
             <div class="form-grid">
               <div class="form-group">
                 <label>First Name</label
-                ><input id="b-fn" type="text" placeholder="John" />
+                ><input id="b-fn" name="first-name" type="text" placeholder="John" />
               </div>
               <div class="form-group">
                 <label>Last Name</label
-                ><input id="b-ln" type="text" placeholder="Smith" />
+                ><input id="b-ln" name="last-name" type="text" placeholder="Smith" />
               </div>
               <div class="form-group">
                 <label>Phone Number</label
-                ><input id="b-ph" type="tel" placeholder="(330) 555-0000" />
+                ><input id="b-ph" name="phone" type="tel" placeholder="(330) 555-0000" />
               </div>
               <div class="form-group">
                 <label>Email Address</label
-                ><input id="b-em" type="email" placeholder="john@email.com" />
+                ><input id="b-em" name="email" type="email" placeholder="john@email.com" />
               </div>
               <div class="form-group full">
                 <label>Appointment Type</label>
-                <select id="b-type">
+                <select id="b-type" name="appointment-type">
                   <option>Test Drive</option>
                   <option>Financing Consultation</option>
                   <option>Vehicle Inspection / Trade-In</option>
@@ -1099,6 +1101,7 @@
                 >
                 <input
                   id="b-veh"
+                  name="vehicle"
                   type="text"
                   placeholder="e.g. 2021 Ford F-250, Sprinter Van..."
                 />
@@ -1112,14 +1115,15 @@
                 >
                 <textarea
                   id="b-notes"
+                  name="notes"
                   placeholder="Any questions or special requests?"
                 ></textarea>
               </div>
             </div>
-            <button class="btn-next" onclick="goStep(4)">
+            <button type="button" class="btn-next" onclick="goStep(4)">
               Review Appointment &#8594;
             </button>
-            <button class="btn-back" onclick="goStep(2)">&#8592; Back</button>
+            <button type="button" class="btn-back" onclick="goStep(2)">&#8592; Back</button>
           </form>
 
           <!-- STEP 4: REVIEW -->
@@ -1533,6 +1537,17 @@
         });
         saveSched();
         saveAppts();
+
+        // Submit to Netlify Forms (async — don't block the success screen)
+        const formEl = document.getElementById("step3");
+        document.getElementById("h-date").value = fmtKey(selDate);
+        document.getElementById("h-time").value = selTime;
+        fetch("/", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams(new FormData(formEl)).toString(),
+        }).catch(() => {});
+
         ["step1", "step2", "step3", "step4"].forEach(
           (id) => (document.getElementById(id).style.display = "none"),
         );
