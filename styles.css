@@ -43,11 +43,9 @@ nav {
   font-size: 2rem;
 }
 .nav-links {
-  .nav-links {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-  }
+  display: flex;
+  align-items: center;
+  gap: 2rem;
 }
 .nav-links a {
   color: #ccc;
@@ -175,15 +173,11 @@ nav {
   align-items: center;
 }
 .range-row input {
-  .range-row input {
-    width: 100%;
-    min-width: 0;
-    padding: 0.45rem 0.5rem;
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    font-size: 0.82rem;
-    box-sizing: border-box;
-  }
+  width: 100%;
+  padding: 0.55rem;
+  border-radius: 6px;
+  border: 1px solid #dcdcdc;
+  box-sizing: border-box;
 }
 .range-row input:focus {
   border-color: var(--blue);
